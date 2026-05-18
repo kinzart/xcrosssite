@@ -3,14 +3,13 @@
 {# Only remove this if you want to take away the theme onboarding advices #}
 {% set show_help = not has_products %}
 
-{% if settings.pagination == 'infinite' %}
-	{% paginate by 48 %}
-{% else %}
-	{% paginate by 48 %}
-{% endif %}
+{# XCROSS V15: força 48 produtos renderizados na primeira carga.
+   Motivo: com settings.pagination == 'infinite', o tema carregava apenas 12 produtos
+   e escondia o restante atrás do botão "Mostrar mais produtos". #}
+{% paginate by 48 %}
 
 <style>
-/* XCROSS V13 — SOMENTE PÁGINA DE PRODUTOS/CATEGORIAS
+/* XCROSS V15 — SOMENTE PÁGINA DE PRODUTOS/CATEGORIAS
    Objetivo: manter filtros nativos, melhorar margem/gap/layout e preservar a UX mobile.
    Não altera carrinho, checkout, produto ou snipplets nativos. */
 
@@ -117,6 +116,76 @@
   gap:clamp(24px, 4vw, 56px);
   margin-left:0!important;
   margin-right:0!important;
+}
+
+/* V15: colunas reais para não quebrar os eventos nativos dos filtros */
+.xcross-filters-column{
+  flex:0 0 clamp(250px, 27%, 340px)!important;
+  width:clamp(250px, 27%, 340px)!important;
+  max-width:340px!important;
+  min-width:245px!important;
+  margin:0!important;
+  padding:22px 20px!important;
+  border:1px solid var(--xc-line)!important;
+  border-radius:24px!important;
+  background:linear-gradient(180deg, rgba(23,28,23,.96), rgba(7,8,7,.96))!important;
+  box-shadow:0 18px 60px rgba(0,0,0,.26);
+  position:sticky;
+  top:96px;
+  max-height:calc(100vh - 118px);
+  overflow:auto;
+  scrollbar-width:thin;
+}
+.xcross-filters-column::-webkit-scrollbar{width:6px}
+.xcross-filters-column::-webkit-scrollbar-thumb{background:rgba(114,255,75,.35);border-radius:999px}
+.xcross-products-column{
+  flex:1 1 0!important;
+  min-width:0!important;
+  max-width:none!important;
+  padding:0!important;
+}
+.xcross-filters-column .font-extra-large,
+.xcross-filters-column h2,
+.xcross-filters-column .h2{
+  color:var(--xc-text)!important;
+  font-family:'Bebas Neue', Impact, sans-serif;
+  font-size:25px!important;
+  line-height:.95;
+  letter-spacing:.035em;
+  text-transform:uppercase;
+  margin-bottom:14px!important;
+}
+.xcross-filters-column a,
+.xcross-filters-column .font-small,
+.xcross-filters-column label{
+  color:#cbd5c7!important;
+  font-size:13px!important;
+  line-height:1.35;
+}
+.xcross-filters-column a:hover{color:var(--xc-green)!important}
+.xcross-filters-column .mb-4{margin-bottom:18px!important}
+.xcross-filters-column .pb-2{padding-bottom:12px!important}
+.xcross-filters-column select,
+.xcross-filters-column input{
+  background:#090b09!important;
+  color:var(--xc-text)!important;
+  border:1px solid rgba(114,255,75,.20)!important;
+  border-radius:12px!important;
+}
+.xcross-filters-column .btn,
+.xcross-filters-column button{border-radius:999px!important}
+.xcross-filters-column input[type="checkbox"],
+.xcross-filters-column input[type="radio"]{
+  pointer-events:auto!important;
+}
+.xcross-filters-column a,
+.xcross-filters-column button,
+.xcross-filters-column label,
+.xcross-filters-column input,
+.xcross-filters-column select{
+  position:relative;
+  z-index:2;
+  pointer-events:auto!important;
 }
 
 /* Coluna esquerda: filtros nativos */
@@ -319,7 +388,8 @@
   }
 
   /* Mobile usa o modal nativo de filtros. O sidebar desktop fica oculto para não esmagar os cards. */
-  .xcross-shop-layout > .filters-sidebar{
+  .xcross-shop-layout > .filters-sidebar,
+  .xcross-shop-layout > .xcross-filters-column{
     display:none!important;
   }
 
@@ -394,7 +464,7 @@
 
 {% include 'snipplets/grid/filters-modals.tpl' %}
 
-<section class="category-body xcross-category-v13 {% if settings.filters_desktop_modal %}pt-md-2{% endif %}" data-store="category-grid-{{ category.id }}">
+<section class="category-body xcross-category-v13 xcross-category-v15 {% if settings.filters_desktop_modal %}pt-md-2{% endif %}">
 	<div class="xcross-products-container">
 
 		<div class="xcross-category-intro">
@@ -419,8 +489,12 @@
 		</nav>
 
 		<div class="row xcross-shop-layout">
-			{% include 'snipplets/grid/filters-sidebar.tpl' %}
-			{% include 'snipplets/grid/products-list.tpl' %}
+			<aside class="xcross-filters-column" aria-label="Filtros de produtos">
+				{% include 'snipplets/grid/filters-sidebar.tpl' %}
+			</aside>
+			<main class="xcross-products-column" aria-label="Lista de produtos">
+				{% include 'snipplets/grid/products-list.tpl' %}
+			</main>
 		</div>
 
 	</div>
