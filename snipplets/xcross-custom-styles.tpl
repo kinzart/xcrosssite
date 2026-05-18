@@ -236,49 +236,72 @@ ul{list-style:none}
 }
 
 /* Imagem do card */
+/* ---- Imagem do card — ZOOM CENTRALIZADO CORRETO ---- */
 .item-image{
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
+  position:relative !important;
+  display:block !important;
   aspect-ratio:1/1 !important;
-  width:100% !important;
   background:#fff !important;
-  border-radius:18px 18px 0 0 !important;
   overflow:hidden !important;
 }
-.item-image img,
-.item-image .img-absolute,
-.item-image .js-item-image{
+
+/* Container interno da imagem */
+.item-image .js-item-image-padding,
+.js-item-image-padding.position-relative.d-block{
   position:relative !important;
-  inset:auto !important;
   display:block !important;
   width:100% !important;
   height:100% !important;
-  max-height:none !important;
-  object-fit:contain !important;
-  object-position:center !important;
-  padding:18px !important;
-  transform:none !important;
+  padding:0 !important;
+  overflow:hidden !important;
 }
 
-/* Esconde imagem secundária/hover/placeholder no card */
+/* Mantém a imagem realmente centralizada */
+.item-image img,
+.item-image .img-absolute,
+.item-image .img-absolute-centered,
+.item-image .img-absolute-centered-vertically,
+.item-image .js-item-image{
+  position:absolute !important;
+  top:50% !important;
+  left:50% !important;
+  right:auto !important;
+  bottom:auto !important;
+
+  width:100% !important;
+  height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+
+  object-fit:contain !important;
+  object-position:center center !important;
+  padding:14px !important;
+
+  transform:translate(-50%, -50%) scale(1) !important;
+  transform-origin:center center !important;
+  transition:transform .5s ease !important;
+}
+
+/* Zoom sem sair do centro */
+.js-item-product:hover .item-image img,
+.item-product:hover .item-image img{
+  transform:translate(-50%, -50%) scale(1.08) !important;
+}
+
+/* Esconde imagem secundária/hover */
 .item-image img:not(:first-of-type),
 .item-image .item-image-secondary,
 .item-image .js-item-image-secondary,
-.item-image .product-item-image-hover,
-.item-image .placeholder-shine,
-.item-image .placeholder-fade,
-.item-image .preloader-bg-img,
-.item-image .blur-up:not(:first-of-type){
+.item-image .product-item-image-hover{
   display:none !important;
-  opacity:0 !important;
-  visibility:hidden !important;
 }
 
-/* Fix padding nativo */
-.js-item-image-padding.position-relative.d-block{
-  padding:0 !important;
+/* Impede troca pra secundária */
+.product-item-secondary-images-loaded:not(.product-item-secondary-images-disabled):hover .item-image-featured{
+  opacity:1 !important;
 }
+
+
 
 /* Info do card */
 .item-description,
@@ -394,3 +417,5 @@ input::placeholder,textarea::placeholder{color:var(--muted) !important}
 .summary-img-thumb {
     border-radius: 8px !important;
 }
+.product-item-secondary-images-loaded:not(.product-item-secondary-images-disabled):hover .item-image-featured{
+opacity:1 !important}
