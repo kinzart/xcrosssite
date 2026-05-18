@@ -1,10 +1,10 @@
 {# /*============================================================================
-  XCROSS BR — Header (substitui snipplets/header/header.tpl)
-  Cópia exata do HTML estático v4, com hooks Twig essenciais:
-   - Logo: imagem fixa do site WordPress
-   - Carrinho: badge dinâmico com {{ cart.items_count }}
-   - Login: usa {{ store.customer_login_url }} / {{ store.customer_home_url }}
+  XCROSS BR — Header (snipplets/header/header.tpl)
+  Design v4 + hooks Twig essenciais + modais do tema Baires (carrinho, nav, busca)
 ==============================================================================*/ #}
+
+{# Site Overlay — necessário para os modais funcionarem #}
+<div class="js-overlay site-overlay" style="display: none;"></div>
 
 {# Topbar marquee #}
 <div class="xc-topbar">
@@ -28,7 +28,7 @@
 
     <nav class="xc-nav" aria-label="Navegação principal">
       <a href="/">Início</a>
-      <a href="/produtos/">Produtos</a>
+      <a href="{{ store.products_url }}">Produtos</a>
       <a href="/hand-grip/">Hand Grip</a>
       <a href="/munhequeira/">Munhequeira</a>
       <a href="#beneficios">Benefícios</a>
@@ -38,7 +38,7 @@
     <div class="xc-actions">
 
       {# Busca #}
-      <a class="xc-icon-btn" href="/buscar/" aria-label="Buscar">
+      <a class="xc-icon-btn js-modal-open" href="#" data-toggle="#nav-search" aria-label="Buscar">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
       </a>
 
@@ -47,8 +47,12 @@
         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </a>
 
-      {# Carrinho com badge dinâmico #}
-      <a class="xc-icon-btn" href="/carrinho/" aria-label="Carrinho">
+      {# Carrinho — abre painel lateral se ajax_cart ativo, senão vai pra página #}
+      {% if settings.ajax_cart and template != 'cart' %}
+        <a class="xc-icon-btn js-modal-open js-cart-open" href="#" data-toggle="#modal-cart" aria-label="Carrinho">
+      {% else %}
+        <a class="xc-icon-btn" href="{{ store.cart_url }}" aria-label="Carrinho">
+      {% endif %}
         <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
         {% if cart.items_count and cart.items_count > 0 %}
           <span class="xc-cart-badge js-cart-amount-quantity">{{ cart.items_count }}</span>
@@ -57,7 +61,7 @@
         {% endif %}
       </a>
 
-      {# Hamburguer mobile #}
+      {# Hamburguer mobile — abre modal de navegação #}
       <button class="xc-hamb js-modal-open" data-toggle="#nav-hamburger" aria-label="Menu">
         <i></i><i></i><i></i>
       </button>
@@ -65,3 +69,17 @@
     </div>
   </div>
 </header>
+
+{# Modais do tema Baires: navegação hamburger, busca, carrinho lateral #}
+{% include "snipplets/header/header-modals.tpl" %}
+
+{# Notificação de "adicionado ao carrinho" #}
+{% if settings.ajax_cart %}
+  {% if not settings.head_fix_desktop %}
+    <div class="d-block d-md-none">
+  {% endif %}
+    {% include "snipplets/notification.tpl" with {add_to_cart: true} %}
+  {% if not settings.head_fix_desktop %}
+    </div>
+  {% endif %}
+{% endif %}

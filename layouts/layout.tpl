@@ -1,7 +1,6 @@
 {# /*============================================================================
   XCROSS BR — layouts/layout.tpl
-  Idêntico ao original do tema base, com 1 bloco <style> adicional logo após
-  o settings.css_code para injetar todo o CSS do layout v4.
+  v4 + modais do carrinho + redirect automático ao carrinho após add
 ==============================================================================*/ #}
 
 <!DOCTYPE html>
@@ -38,8 +37,6 @@
         {{ 'css/style-critical.scss' | static_url | static_inline }}
 
         <link rel="stylesheet" href="{{ 'css/style-async.scss' | static_url }}" media="print" onload="this.media='all'">
-
-        {# Loads custom CSS added from Advanced Settings on the admin´s theme customization screen #}
 
         <style>
             {{ settings.css_code | raw }}
@@ -81,16 +78,16 @@
 
         {{back_to_admin}}
 
-        {# Header XCross v4 #}
+        {# Header XCross v4 (inclui overlay + modais + notificação) #}
         {% snipplet "header/header.tpl" %}
 
         {# Page content #}
         {% template_content %}
 
-        {# Quickshop modal (mantido do tema base) #}
+        {# Quickshop modal #}
         {% snipplet "grid/quick-shop.tpl" %}
 
-        {# Footer XCross v4 + WhatsApp já incluso dentro #}
+        {# Footer XCross v4 + WhatsApp #}
         {% snipplet "footer/footer.tpl" %}
 
         {% if cart.free_shipping.cart_has_free_shipping or cart.free_shipping.min_price_free_shipping.min_price %}
@@ -119,5 +116,59 @@
                 });
             </script>
         {% endif %}
+
+        {#/*============================================================================
+            #XCROSS BR — Redirect automático ao carrinho após adicionar produto
+        ==============================================================================*/#}
+        <script>
+        (function(){
+            var cartUrl = '{{ store.cart_url | escape("js") }}';
+
+            {# Intercepta a resposta do LS.addToCartEnhanced via MutationObserver #}
+            {# Quando a notificação "adicionado ao carrinho" aparece, redireciona #}
+            var observer = new MutationObserver(function(mutations){
+                mutations.forEach(function(m){
+                    if (m.type === 'attributes' && m.attributeName === 'style') {
+                        var el = m.target;
+                        if (el.classList.contains('js-alert-added-to-cart') && el.style.display !== 'none') {
+                            {# Produto adicionado com sucesso — redireciona ao carrinho #}
+                            setTimeout(function(){ window.location.href = cartUrl; }, 300);
+                        }
+                    }
+                });
+            });
+
+            {# Observa mudanças na notificação de add-to-cart #}
+            function startObserving(){
+                var notifications = document.querySelectorAll('.js-alert-added-to-cart');
+                notifications.forEach(function(notif){
+                    observer.observe(notif, { attributes: true, attributeFilter: ['style'] });
+                });
+            }
+
+            {# Fallback: intercepta submit de forms de carrinho #}
+            document.addEventListener('submit', function(e){
+                var form = e.target;
+                if (form.classList.contains('js-product-form')) {
+                    {# Se ajax_cart está desativado, o form faz POST normal pro carrinho #}
+                    {# Se ativado, o JS do LS intercepta — o observer cuida do redirect #}
+                }
+            });
+
+            {# Inicia quando o DOM estiver pronto #}
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', startObserving);
+            } else {
+                startObserving();
+            }
+
+            {# Também observa se a notificação for criada dinamicamente depois #}
+            var bodyObserver = new MutationObserver(function(){
+                startObserving();
+            });
+            bodyObserver.observe(document.body, { childList: true, subtree: true });
+        })();
+        </script>
+
     </body>
 </html>
