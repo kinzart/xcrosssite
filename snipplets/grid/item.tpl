@@ -168,7 +168,7 @@
                     {% endif %}
 
                     {{ component('nubesdk-slot', { type: "before_product_grid_item_name" }) }}
-{% if template == 'home' %}
+{% if template == 'home' or template == 'category' %}
   {% if product.category.name %}
     <div class="xc2-card-category">{{ product.category.name }}</div>
   {% elseif product.default_category.name %}
