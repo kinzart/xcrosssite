@@ -29,9 +29,6 @@
     <nav class="xc-nav" aria-label="Navegação principal">
       <a href="/">Início</a>
       <a href="{{ store.products_url }}">Produtos</a>
-      <a href="/hand-grip/">Hand Grip</a>
-      <a href="/munhequeira/">Munhequeira</a>
-      <a href="#beneficios">Benefícios</a>
       <a href="/contato/">Contato</a>
     </nav>
 
