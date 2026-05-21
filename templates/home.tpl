@@ -105,17 +105,19 @@ function trackProductClick(url, name, price) {
     </div>
 
     <div class="xc-home-filter-wrap" aria-label="Filtros de categoria da home">
-      <div class="xc-home-filters">
-        <button class="xc-filter-pill active" type="button" data-xc-filter="all">Todos</button>
-        <button class="xc-filter-pill" type="button" data-xc-filter="hand-grip">Hand Grip</button>
-        <button class="xc-filter-pill" type="button" data-xc-filter="munhequeira">Munhequeira</button>
-        <button class="xc-filter-pill" type="button" data-xc-filter="joelheira">Joelheira</button>
-        <button class="xc-filter-pill" type="button" data-xc-filter="acessorios">Acessórios</button>
-        <button class="xc-filter-pill" type="button" data-xc-filter="novidades">Novidades</button>
-        <button class="xc-filter-pill" type="button" data-xc-filter="outlet">Outlet</button>
+
+        <div class="xc-home-filters">
+          <button class="xc-filter-pill active" type="button" data-xc-filter="all">Todos</button>
+          <button class="xc-filter-pill" type="button" data-xc-filter="lingua-de-gato">Língua de gato</button>
+          <button class="xc-filter-pill" type="button" data-xc-filter="joelheira">Joelheira</button>
+          <button class="xc-filter-pill" type="button" data-xc-filter="anatomic">Anatômics</button>
+          <button class="xc-filter-pill" type="button" data-xc-filter="munhequeira">Munhequeiras</button>
+          <button class="xc-filter-pill" type="button" data-xc-filter="acessorios">Acessórios</button>
+        </div>
+
+        <div class="xc-home-filter-note" id="xc-home-filter-count">Mostrando produtos em destaque</div>
+
       </div>
-      <div class="xc-home-filter-note" id="xc-home-filter-count">Mostrando produtos em destaque</div>
-    </div>
 
     <div class="xc-products" id="xc-home-products">
       <article class="xc-product" data-xc-category="hand-grip lingua-de-gato novidades"><a class="xc-p-img" href="/produtos/hand-grip-x-cross-lingua-de-gato-lona-de-borracha/" onclick="return trackProductClick(this.href, 'HAND GRIP X-CROSS LÍNGUA DE GATO', 'R$ 249,90')"><span class="xc-p-badge">Novo</span><img src="https://xcrossbr.com.br/wp-content/uploads/2025/09/5-700x700.jpg" alt="HAND GRIP X-CROSS LÍNGUA DE GATO" loading="lazy"></a><div class="xc-p-info"><div class="xc-p-cat">Hand Grip · Língua de Gato · Novidades</div><h3 class="xc-p-name">HAND GRIP X-CROSS LÍNGUA DE GATO ( LONA DE BORRACHA )</h3><div class="xc-p-price"><strong>R$ 249,90</strong></div><div class="xc-installments">3x de R$83,30 sem juros</div><a class="xc-btn xc-btn-small xc-btn-primary" href="/produtos/hand-grip-x-cross-lingua-de-gato-lona-de-borracha/" onclick="return trackProductClick(this.href, 'HAND GRIP X-CROSS LÍNGUA DE GATO', 'R$ 249,90')">Ver opções</a></div></article>
@@ -157,26 +159,81 @@ function trackProductClick(url, name, price) {
 
 <script>
 (function(){
+
   function normalize(value){
     return (value || '').toString().toLowerCase()
       .normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   }
+
+  function getHomeProductPriority(card){
+    var cats = normalize(card.getAttribute('data-xc-category'));
+    var text = cats + ' ' + normalize(card.textContent);
+
+    if(text.indexOf('outlet') !== -1) return 999;
+    if(text.indexOf('lingua-de-gato') !== -1 || (text.indexOf('lingua') !== -1 && text.indexOf('gato') !== -1)) return 1;
+    if(text.indexOf('joelheira') !== -1) return 2;
+    if(text.indexOf('anatomic') !== -1 || text.indexOf('anatomics') !== -1) return 3;
+    if(text.indexOf('munhequeira') !== -1) return 4;
+    if(text.indexOf('acessorios') !== -1 || text.indexOf('acessorio') !== -1 || text.indexOf('pochete') !== -1 || text.indexOf('luva') !== -1) return 5;
+
+    return 50;
+  }
+
+  function prepareHomeProducts(){
+    var container = document.getElementById('xc-home-products');
+    if(!container) return;
+
+    var cards = Array.prototype.slice.call(container.querySelectorAll('.xc-product'));
+
+    cards = cards.filter(function(card){
+      var text = normalize(card.getAttribute('data-xc-category') + ' ' + card.textContent);
+      var isOutlet = text.indexOf('outlet') !== -1;
+
+      if(isOutlet && card.parentNode){
+        card.parentNode.removeChild(card);
+      }
+
+      return !isOutlet;
+    });
+
+    cards.sort(function(a, b){
+      return getHomeProductPriority(a) - getHomeProductPriority(b);
+    });
+
+    cards.forEach(function(card, index){
+      if(index < 8){
+        container.appendChild(card);
+      }else if(card.parentNode){
+        card.parentNode.removeChild(card);
+      }
+    });
+  }
+
   function updateHomeFilter(filter){
     var cards = Array.prototype.slice.call(document.querySelectorAll('#xc-home-products .xc-product'));
     var visible = 0;
+
     cards.forEach(function(card){
       var cats = normalize(card.getAttribute('data-xc-category'));
       var show = filter === 'all' || cats.indexOf(filter) !== -1;
+
       card.classList.toggle('xc-hidden', !show);
+
       if(show) visible++;
     });
+
     var counter = document.getElementById('xc-home-filter-count');
+
     if(counter){
       counter.textContent = visible + ' produto' + (visible === 1 ? '' : 's') + ' em destaque';
     }
   }
+
   document.addEventListener('DOMContentLoaded', function(){
+    prepareHomeProducts();
+
     var buttons = Array.prototype.slice.call(document.querySelectorAll('[data-xc-filter]'));
+
     buttons.forEach(function(btn){
       btn.addEventListener('click', function(){
         buttons.forEach(function(b){ b.classList.remove('active'); });
@@ -184,7 +241,9 @@ function trackProductClick(url, name, price) {
         updateHomeFilter(normalize(btn.getAttribute('data-xc-filter')));
       });
     });
+
     updateHomeFilter('all');
   });
+
 })();
 </script>
