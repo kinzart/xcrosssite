@@ -175,8 +175,33 @@ ul{list-style:none}
   .xc-topbar span{padding-inline:28px;font-size:11px}
 }
 @media(max-width:460px){
-  .xc-products{grid-template-columns:1fr}
-  .xc-p-info{min-height:auto}
+  #xc-home-products{
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+  }
+
+  #xc-home-products .xc-p-info{
+    padding:10px;
+    min-height:190px;
+  }
+
+  #xc-home-products .xc-p-name{
+    font-size:12px;
+    line-height:1.25;
+  }
+
+  #xc-home-products .xc-p-price strong{
+    font-size:15px;
+  }
+
+  #xc-home-products .xc-installments{
+    font-size:11px;
+  }
+
+  #xc-home-products .xc-btn-small{
+    padding:10px 8px;
+    font-size:11px;
+  }
 }
 
 /* ======================================================================
