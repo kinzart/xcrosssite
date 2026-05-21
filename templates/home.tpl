@@ -5,25 +5,58 @@
 ==============================================================================*/ #}
 
 <style>
-/* XCROSS V12 — ajustes da vitrine nativa da home */
-.xcross-home-native-grid{
-  align-items:stretch;
+/* XCROSS — ajustes da vitrine dinâmica da home */
+
+.xc-home-dynamic-products{
+  margin-top:28px;
 }
 
-.xc-empty-featured-products{
-  border:1px solid rgba(114,255,75,.18);
-  background:rgba(255,255,255,.03);
-  border-radius:18px;
-  padding:28px;
-  color:#dfe8da;
+.xc-home-dynamic-products .xc-product{
+  overflow:hidden;
 }
 
-@media(max-width:760px){
-  #xc-home-products > [class*="col-"],
-  #xc-home-products .js-item-product{
-    flex:0 0 50%;
-    max-width:50%;
-    width:50%;
+.xc-home-dynamic-products .xc-p-img{
+  display:block;
+  position:relative;
+}
+
+.xc-home-dynamic-products .xc-p-img img{
+  width:100%;
+  display:block;
+}
+
+@media(max-width:460px){
+  #xc-home-products{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;
+  }
+
+  #xc-home-products .xc-p-info{
+    padding:10px!important;
+    min-height:190px;
+  }
+
+  #xc-home-products .xc-p-cat{
+    font-size:10px;
+    line-height:1.2;
+  }
+
+  #xc-home-products .xc-p-name{
+    font-size:12px;
+    line-height:1.25;
+  }
+
+  #xc-home-products .xc-p-price strong{
+    font-size:15px;
+  }
+
+  #xc-home-products .xc-installments{
+    font-size:11px;
+  }
+
+  #xc-home-products .xc-btn-small{
+    padding:10px 8px;
+    font-size:11px;
   }
 }
 </style>
@@ -119,41 +152,80 @@ function trackProductClick(url, name, price) {
           <p class="xc-section-sub">Itens destacados na Nuvemshop: hand grips, munhequeiras, joelheira e acessórios para treino funcional.</p>
         </div>
         <a class="xc-btn xc-btn-ghost" href="/produtos/?utm_source=site_html&amp;utm_medium=section_cta&amp;utm_campaign=home_xcross">Ver todos</a>
-      </div>
+     </div>
 
-      {# Produtos em destaque puxados da Nuvemshop ----------------------------- #}
+{# Produtos em destaque puxados da Nuvemshop com visual XCross antigo -------- #}
 
-      {% set section_columns_desktop = 4 %}
-      {% set section_columns_mobile = 2 %}
-      {% set featured_products = sections.primary.products | slice(0, 8) %}
+{% set products = sections.primary.products | slice(0, 8) %}
 
-      {% if featured_products %}
+{% if products %}
 
-        <div class="row">
-          <div class="col">
+  <div class="xc-products xc-home-dynamic-products" id="xc-home-products">
 
-            <div class="js-product-table row row-grid xcross-home-native-grid" id="xc-home-products" data-store="home-featured-products">
+    {% for product in products %}
 
-              {% for product in featured_products %}
-                {% include 'snipplets/grid/item.tpl' with {
-                  image_priority_high: loop.index <= 2
-                } %}
-              {% endfor %}
+      {% set product_category_name = product.category.name ? product.category.name : (product.default_category.name ? product.default_category.name : (product.categories[0].name ? product.categories[0].name : 'Novidades')) %}
 
+      <article class="xc-product">
+
+        <a class="xc-p-img"
+           href="{{ product.url }}"
+           onclick="return trackProductClick(this.href, '{{ product.name | escape('js') }}', '{{ product.price | money | escape('js') }}')">
+
+          {% if product.compare_at_price %}
+            <span class="xc-p-badge orange">Promo</span>
+          {% else %}
+            <span class="xc-p-badge">Novo</span>
+          {% endif %}
+
+          {% if product.featured_image %}
+            <img src="{{ product.featured_image | product_image_url('large') }}"
+                 alt="{{ product.name }}"
+                 loading="lazy">
+          {% endif %}
+
+        </a>
+
+        <div class="xc-p-info">
+
+          <div class="xc-p-cat">{{ product_category_name }}</div>
+
+          <h3 class="xc-p-name">{{ product.name }}</h3>
+
+          {% if product.display_price %}
+            <div class="xc-p-price">
+              <strong>{{ product.price | money }}</strong>
+
+              {% if product.compare_at_price %}
+                <span>{{ product.compare_at_price | money }}</span>
+              {% endif %}
             </div>
+          {% endif %}
 
-          </div>
+          <div class="xc-installments">Consulte opções no produto</div>
+
+          <a class="xc-btn xc-btn-small xc-btn-primary"
+             href="{{ product.url }}"
+             onclick="return trackProductClick(this.href, '{{ product.name | escape('js') }}', '{{ product.price | money | escape('js') }}')">
+            Ver opções
+          </a>
+
         </div>
 
-      {% else %}
+      </article>
 
-        <div class="xc-empty-featured-products">
-          <p>Nenhum produto em destaque foi selecionado ainda.</p>
-        </div>
+    {% endfor %}
 
-      {% endif %}
+  </div>
 
-    </div>
+{% else %}
+
+  <div class="xc-empty-featured-products">
+    <p>Nenhum produto em destaque foi selecionado ainda.</p>
+  </div>
+
+{% endif %}
+   
   </section>
 
 </main>
