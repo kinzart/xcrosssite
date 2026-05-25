@@ -8,7 +8,8 @@
     <div class="xc-footer-grid">
 
       <div>
-        <img src="https://xcrossbr.com.br/wp-content/uploads/2024/11/Logo-Horizontal-XCrossBr.png" alt="XCross BR">
+
+        <img src="{{ 'images/header/Logo-Horizontal-XCrossBr.png' | static_url }}" alt="XCross BR">
         <p>Acessórios para CrossFit, treino funcional e alta performance. Resistência, aderência e conforto para quem não larga a barra.</p>
       </div>
 
@@ -24,7 +25,6 @@
       <div>
         <h4>Institucional</h4>
         <ul>
-          <li><a href="https://xcrossbr.com.br/atacado/">Atacado</a></li>
           <li><a href="/contato/">Contato</a></li>
           <li><a href="/">Loja Oficial</a></li>
         </ul>
