@@ -91,46 +91,73 @@ function trackProductClick(url, name, price) {
 </script>
 
 <main id="topo">
+<section class="xc-hero-carousel" aria-label="Banners XCross BR">
+  <div class="xc-carousel" id="xc-carousel">
 
-  <section class="xc-hero-carousel" aria-label="Banners XCross BR">
-    <div class="xc-carousel" id="xc-carousel">
-      <article class="xc-slide active" data-slide="0">
-        <a href="/produtos/hand-grip-x-cross-lingua-de-gato-lona-de-borracha/?utm_source=site_html&amp;utm_medium=banner&amp;utm_campaign=home_xcross&amp;utm_content=lingua_de_gato" onclick="return trackProductClick(this.href, 'Lançamento Língua de Gato', 'banner')" aria-label="Comprar lançamento">
-          <picture>
-            <source media="(max-width: 760px)" srcset="https://xcrossbr.com.br/wp-content/uploads/2025/10/Banner-Lancamento-lingua-de-gato-tarja-preta-CELULAR.png">
-            <img src="https://xcrossbr.com.br/wp-content/uploads/2025/10/Banner-Lancamento-lingua-de-gato-tarja-preta-2-scaled.png" alt="Lançamento Língua de Gato">
-          </picture>
-        </a>
-      </article>
+    <article class="xc-slide active" data-slide="0">
+      <a href="/produtos/hand-grip-x-cross-lingua-de-gato-lona-de-borracha/?utm_source=site_html&amp;utm_medium=banner&amp;utm_campaign=home_xcross&amp;utm_content=lingua_de_gato"
+         onclick="return trackProductClick(this.href, 'Lançamento Língua de Gato', 'banner')"
+         aria-label="Comprar lançamento">
+        <picture>
+          <source
+            media="(max-width: 760px)"
+            srcset="{{ 'images/banner/Banner-Lancamento-lingua-de-gato-tarja-preta-CELULAR.png' | static_url }}">
+          <img
+            src="{{ 'images/banner/Banner-Lancamento-lingua-de-gato-tarja-preta-2-scaled.png' | static_url }}"
+            alt="Lançamento Língua de Gato"
+            loading="eager">
+        </picture>
+      </a>
+    </article>
 
-      <article class="xc-slide" data-slide="1">
-        <a href="/produtos/hand-grip-x-cross-lingua-de-gato-lona-de-borracha/?utm_source=site_html&amp;utm_medium=banner&amp;utm_campaign=home_xcross&amp;utm_content=colocando_hand_grip" onclick="return trackProductClick(this.href, 'Hand Grip Língua de Gato', 'banner')" aria-label="Ver produto">
-          <picture>
-            <source media="(max-width: 760px)" srcset="https://xcrossbr.com.br/wp-content/uploads/2025/10/Banner-Colocando-Hand-Grip-CELULAR-2.png">
-            <img src="https://xcrossbr.com.br/wp-content/uploads/2025/10/Banner-Colocando-Hand-Grip-1.png" alt="Hand Grip Língua de Gato">
-          </picture>
-        </a>
-      </article>
+    <article class="xc-slide" data-slide="1">
+      <a href="/produtos/hand-grip-x-cross-lingua-de-gato-lona-de-borracha/?utm_source=site_html&amp;utm_medium=banner&amp;utm_campaign=home_xcross&amp;utm_content=colocando_hand_grip"
+         onclick="return trackProductClick(this.href, 'Hand Grip Língua de Gato', 'banner')"
+         aria-label="Ver produto">
+        <picture>
+          <source
+            media="(max-width: 760px)"
+            srcset="{{ 'images/banner/Banner-Colocando-Hand-Grip-CELULAR-2.png' | static_url }}">
+          <img
+            src="{{ 'images/banner/Banner-Colocando-Hand-Grip-1.png' | static_url }}"
+            alt="Hand Grip Língua de Gato"
+            loading="lazy">
+        </picture>
+      </a>
+    </article>
 
-      <article class="xc-slide" data-slide="2">
-        <a href="/hand-grip/?utm_source=site_html&amp;utm_medium=banner&amp;utm_campaign=home_xcross&amp;utm_content=anatomic" onclick="return trackProductClick(this.href, 'Hand Grip Anatômic', 'banner')" aria-label="Ver Hand Grips">
-          <picture>
-            <source media="(max-width: 760px)" srcset="https://xcrossbr.com.br/wp-content/uploads/2025/10/Banner-Anatomic-CELULAR-1.png">
-            <img src="https://xcrossbr.com.br/wp-content/uploads/2025/10/Banner-Anatomic-1.png" alt="Hand Grip Anatômic">
-          </picture>
-        </a>
-      </article>
+    <article class="xc-slide" data-slide="2">
+      <a href="/hand-grip/?utm_source=site_html&amp;utm_medium=banner&amp;utm_campaign=home_xcross&amp;utm_content=anatomic"
+         onclick="return trackProductClick(this.href, 'Hand Grip Anatômic', 'banner')"
+         aria-label="Ver Hand Grips">
+        <picture>
+          <source
+            media="(max-width: 760px)"
+            srcset="{{ 'images/banner/Banner-Anatomic-CELULAR-1.png' | static_url }}">
+          <img
+            src="{{ 'images/banner/Banner-Anatomic-1.png' | static_url }}"
+            alt="Hand Grip Anatômic"
+            loading="lazy">
+        </picture>
+      </a>
+    </article>
 
-      <button class="xc-arrow prev" type="button" aria-label="Banner anterior"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
-      <button class="xc-arrow next" type="button" aria-label="Próximo banner"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+    <button class="xc-arrow prev" type="button" aria-label="Banner anterior">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
 
-      <div class="xc-carousel-controls" aria-label="Controle dos banners">
-        <button class="xc-dot active" type="button" aria-label="Banner 1"></button>
-        <button class="xc-dot" type="button" aria-label="Banner 2"></button>
-        <button class="xc-dot" type="button" aria-label="Banner 3"></button>
-      </div>
+    <button class="xc-arrow next" type="button" aria-label="Próximo banner">
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+
+    <div class="xc-carousel-controls" aria-label="Controle dos banners">
+      <button class="xc-dot active" type="button" aria-label="Banner 1"></button>
+      <button class="xc-dot" type="button" aria-label="Banner 2"></button>
+      <button class="xc-dot" type="button" aria-label="Banner 3"></button>
     </div>
-  </section>
+
+  </div>
+</section>
 
   <div class="xc-trust-strip" id="beneficios">
     <div class="xc-container">
