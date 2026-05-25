@@ -22,9 +22,15 @@
 <header class="xc-header">
   <div class="xc-container xc-header-inner">
 
-    <a class="xc-logo" href="/" aria-label="XCross BR">
-      <img src="https://xcrossbr.com.br/assets/header/Logo-Horizontal-XCrossBr.png" alt="XCross BR">
-    </a>
+<a class="xc-logo" href="/" aria-label="XCross BR">
+  <img
+    src="{{ 'images/header/Logo-Horizontal-XCrossBr.png' | static_url }}"
+    alt="XCross BR"
+    width="220"
+    height="auto"
+    loading="eager"
+  >
+</a>
 
     <nav class="xc-nav" aria-label="Navegação principal">
       <a href="/">Início</a>
